@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="Top">
+<!--    <div id="Top">
       <div class="content">
         <div style="padding-top: 6px;">
           <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -14,14 +14,15 @@
           </table>
         </div>
       </div>
-    </div>
+    </div>-->
+    <Top/>
     <div id="Wrapper">
       <div class="content">
         <div id="Leftbar"></div>
         <div id="Rightbar">
           <div class="sep20"></div>
           <div class="box">
-            <div class="cell">&nbsp;{{this.$store.state.user.userName}} 个人信息</div>
+            <div class="cell">&nbsp;{{this.$store.state.user.user_name}} 个人信息</div>
 
             <nav class="level is-mobile">
               <div class="level-item has-text-centered">
@@ -33,19 +34,19 @@
               <div class="level-item has-text-centered">
                 <div>
                   <p class="heading">粉丝</p>
-                  <p>123</p>
+                  <p>{{userPosts.user_fans}}</p>
                 </div>
               </div>
               <div class="level-item has-text-centered">
                 <div>
-                  <p class="heading">你关注的人数</p>
-                  <p>456K</p>
+                  <p class="heading">关注的人数</p>
+                  <p>{{userPosts.user_follow}}</p>
                 </div>
               </div>
               <div class="level-item has-text-centered">
                 <div>
                   <p class="heading">获赞数</p>
-                  <p>789</p>
+                  <p>{{userPosts.user_posts}}</p>
                 </div>
               </div>
             </nav>
@@ -60,12 +61,13 @@
                 <tbody>
                   <tr>
                     <td width="73" valign="top" align="center">
-                      <img
+<!--                      <img
                         :src="require(`@/assets/${$store.state.user.userImg}`)"
                         class="avatar"
                         border="0"
                         align="default"
-                      />
+                      />-->
+                      <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
                       <!-- <img
                         src="//cdn.v2ex.com/gravatar/873548b247e76e0e16ac5f8280c0004c?s=73&amp;d=retro"
                         class="avatar"
@@ -78,11 +80,11 @@
                     <td width="10"></td>
                     <td width="auto" valign="top" align="left">
                       <div class="fr"></div>
-                      <h1 style="margin-bottom: 5px;">{{this.$store.state.user.userName}}</h1>
-                      <span class="gray">
+                      <h1 style="margin-bottom: 5px;">{{this.$store.state.user.user_name}}</h1>
+<!--                      <span class="gray">
                         <div class="sep5"></div>
                         {{$store.state.user.userShow}}
-                      </span>
+                      </span>-->
                       <div class="sep10"></div>
                     </td>
                   </tr>
@@ -105,9 +107,9 @@
                   <div class="media-content">
                     <div class="content">
                       <p>
-                        <strong>{{item.artTitle}}</strong>
+                        <strong>{{item.post_title}}</strong>
                         <br />
-                        {{item.artContent}}
+                        {{item.post_content}}
                       </p>
                     </div>
                     <nav class="level is-mobile">
@@ -116,21 +118,27 @@
                           <span class="icon is-small">
                             <i class="fab fa-hotjar"></i>
                           </span>
-                          {{item.artHotNum}}
+                          {{item.post_star}}
                         </a>
 
                         <a class="level-item">
                           <span class="icon is-small">
                             <i class="fas fa-comment-dots"></i>
                           </span>
-                          {{item.artComNum}}
+                          {{item.post_reply}}
                         </a>
 
                         <a class="level-item">
                           <span class="icon is-small">
                             <i class="fas fa-heart"></i>
                           </span>
-                          {{item.artLikeNum}}
+                          {{item.post_like}}
+                        </a>
+                      </div>
+                      <small class="gray">发布时间: {{item.creat_time}}</small>
+                      <div class="media-right">
+                        <a class="navbar-item" slot="trigger" role="button">
+                          <b-button type="is-info" outlined @click="details(i)">查看详情</b-button>
                         </a>
                       </div>
                     </nav>
@@ -149,7 +157,9 @@
 
 
 <script>
-import { findartbyuserid } from "@/api";
+import {findartbyuserid, get_userposts_by_userId} from "@/api";
+import Top from "@/components/articlehome/Top";
+
 
 export default {
   data() {
@@ -157,27 +167,78 @@ export default {
       mypostnum: 0,
       mypost: [
         {
-          artId: 0,
-          artComNum: 0,
-          artCommentId: 0,
-          artContent: "",
-          artCreTime: "",
-          artHotNum: "",
-          artLikeNum: "",
-          artTitle: "",
-          artTypeId: 0,
-          artUserId: "",
-          artView: ""
+          creat_time: "",
+          is_delete: 0,
+          post_content: 0,
+          post_id: 0,
+          post_like: 0,
+          post_reply: 0,
+          post_star: 0,
+          post_status: 0,
+          post_title: "",
+          post_type: 0,
+          post_userid: 0,
+          update_time:""
         }
-      ]
+      ],
+      userPosts:{
+        creat_time:"" ,
+        update_time:"",
+        user_fans:0,
+        user_follow: 0 ,
+        user_id: 0 ,
+        user_posts: 0,
+      }
     };
   },
   created() {
-    findartbyuserid(this.$store.state.user.userId).then(res => {
-      const { data } = res;
-      this.mypost = data;
-      this.mypostnum = data.length;
+    findartbyuserid(this.$store.state.user.id).then(res => {
+      this.mypost = res.data;
+      this.mypostnum = res.data.length;
     });
+    get_userposts_by_userId(this.$store.state.user.id).then(res => {
+      this.userPosts = res.data;
+    });
+  },
+  methods:{
+    details(i) {
+      const detaildata =         {
+        post_id: this.mypost[i].post_id,
+        post_type: this.mypost[i].post_type,
+        post_title: this.mypost[i].post_title,
+        post_content: this.mypost[i].post_content,
+        post_userid: this.mypost[i].post_userid,
+        post_star: this.mypost[i].post_star,
+        post_like: this.mypost[i].post_like,
+        post_reply: this.mypost[i].post_reply,
+        post_status: this.mypost[i].post_status,
+        creat_time: this.mypost[i].creat_time,
+        user: {
+          id: this.$store.state.user.id,
+          user_name: this.$store.state.user.user_name,
+          user_account: this.$store.state.user.user_account,
+          avatar_url: this.$store.state.user.avatar_url,
+          gender: this.$store.state.user.gender,
+          phone: this.$store.state.user.phone,
+          email: this.$store.state.user.email,
+          user_role: this.$store.state.user.user_role,
+          user_status: this.$store.state.user.user_status,
+          creat_time: this.$store.state.user.creat_time,
+          is_delete: this.$store.state.user.is_delete,
+          token: this.$store.state.user.token,
+        }
+      };
+      //console.log(detaildata);
+      this.$router.push({
+        path: "/details",
+        query: {
+          detaildata: JSON.stringify(detaildata)
+        }
+      });
+    }
+  },
+  components:{
+    Top
   }
 };
 </script>

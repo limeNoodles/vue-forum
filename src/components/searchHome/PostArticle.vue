@@ -111,13 +111,12 @@
                   aria-hidden="true"
                   v-model="select"
                 >
-                  <option :value="types.type_id" v-for="types in ArticleTypes" :key="types" >{{types.type_name}}</option>
-                  <!--                  <option value="1" data-select2-id="1069">篮球</option>
-                                    <option value="2" data-select2-id="1070">足球</option>
-                                    <option value="3" data-select2-id="1069">步行街</option>
-                                    <option value="4" data-select2-id="1069">跳蚤市场</option>
-                                    <option value="5" data-select2-id="1069">健身区</option>
-                                    <option value="6" data-select2-id="1069">学习专区</option>-->
+                  <option value="1" data-select2-id="1069">篮球</option>
+                  <option value="2" data-select2-id="1070">足球</option>
+                  <option value="3" data-select2-id="1069">步行街</option>
+                  <option value="4" data-select2-id="1069">跳蚤市场</option>
+                  <option value="5" data-select2-id="1069">健身区</option>
+                  <option value="6" data-select2-id="1069">学习专区</option>
                 </select>
                 <span
                   class="select2 select2-container select2-container--default"
@@ -211,7 +210,7 @@
 
 
 <script>
-import {getAllArticleType, newpost} from "@/api";
+import { newpost } from "@/api";
 import Top from "@/components/articlehome/Top";
 export default {
   data() {
@@ -220,25 +219,8 @@ export default {
       title: "",
       text: "",
       userId: "",
-      token : "",
-      ArticleTypes: [
-        {
-          type_id: 0,
-          type_name: "",
-          creat_time: "",
-          type_description: "",
-          post_num: 0
-        }
-      ],
+      token : ""
     };
-  },
-  mounted() {
-    getAllArticleType()
-        .then(res => {
-          this.ArticleTypes = res.data;
-        })
-        .catch(() => {
-        });
   },
   methods: {
     post() {

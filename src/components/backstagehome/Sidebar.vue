@@ -18,10 +18,10 @@
       <span slot="title">帖子管理</span>
     </el-menu-item>
 
-    <el-menu-item index="3">
+<!--    <el-menu-item index="3">
       <i class="el-icon-folder-add"></i>
       <span slot="title">板块管理</span>
-    </el-menu-item>
+    </el-menu-item>-->
   </el-menu>
 </template>
 
@@ -56,9 +56,9 @@ export default {
         case "2":
           this.$router.push("/articlemanger");
           break;
-        case "3":
+        /*case "3":
           this.$router.push("/typemanger");
-          break;
+          break;*/
       }
     }
   }

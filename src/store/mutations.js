@@ -5,19 +5,19 @@ export default {
     login(state, user) {
         state.isLogin = true;
         state.user = user;
-        window.localStorage.setItem('user', JSON.stringify(user));
-        window.localStorage.setItem('isLogin', true)
+        window.sessionStorage.setItem('user', JSON.stringify(user));
+        window.sessionStorage.setItem('isLogin', true)
     },
     logout(state) {
         state.isLogin = '';
-        window.localStorage.removeItem('user')
-        window.localStorage.removeItem('isLogin')
+        window.sessionStorage.removeItem('user')
+        window.sessionStorage.removeItem('isLogin')
     },
 
     getpagemain(state, payload) {
         state.info = payload.info;
         // state.totalPages = payload.totalPages;
-        state.totalElements = payload.totalElements;
+        state.total = payload.total;
     },
 
     first(state, payload) {

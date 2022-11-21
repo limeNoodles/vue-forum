@@ -1,6 +1,6 @@
 <template>
   <div class="tile is-ancestor">
-    <div class="tile is-parent is-8">
+    <div class="tile is-parent is-0-fullhd">
       <article class="tile is-child box">
         <p align="right">
           <button class="button is-info" @click="getAll">全部帖子</button>
@@ -55,7 +55,6 @@
                       {{ content.post_like }}
                     </a>
                   </div>
-                  <small class="gray">发布时间: {{content.creat_time}}</small>
                 </nav>
               </div>
               <div class="media-right">
@@ -75,7 +74,7 @@
         </ul>
       </article>
     </div>
-    <div class="tile is-parent">
+<!--    <div class="tile is-parent">
       <article class="tile is-child box">
         <p class="subtitle">所有板块</p>
 
@@ -112,19 +111,18 @@
           </footer>
         </div>
       </article>
-    </div>
+    </div>-->
   </div>
 </template>
 
 
 <script>
-import {getAllArticle} from "@/api";
-import {getAllArticleType} from "@/api";
-import {getArticleByTypeId} from "@/api";
+import {getAllArticle, getAllArticleSearch} from "@/api";
 
 export default {
   data() {
     return {
+      search:"",
       isLoading: false,
       isFullPage: false,
       btnFlag: false,
@@ -162,33 +160,28 @@ export default {
         }
       ],
       test: [],
-      ArticleTypes: [
-        {
-          type_id: 0,
-          type_name: "",
-          creat_time: "",
-          type_description: "",
-          post_num: 0
-        }
-      ],
       number: 1,
       totalPages: 5
     };
   },
   mounted() {
-    getAllArticle(0)
+    getAllArticleSearch(1,this.search)
         .then(res => {
+          if(res.data.list.length <1){
+            const h = this.$createElement;
+            this.$message({
+              message: h('p', null, [
+                h('span', null, ''),
+                h('i', { style: 'color: red' }, '没有查询结果')
+              ])
+            })
+            this.$router.push("/");
+          }
           this.contents.shift();
           this.contents = res.data.list;
           this.totalPages = res.data.pages;
           this.number = 1;
           this.flag=0;
-        })
-        .catch(() => {
-        });
-    getAllArticleType()
-        .then(res => {
-          this.ArticleTypes = res.data;
         })
         .catch(() => {
         });
@@ -207,12 +200,12 @@ export default {
         this.isLoading = true;
 
         setTimeout(() => {
-          getAllArticle(++this.number)
+          getAllArticleSearch(++this.number,this.search)
               .then(res => {
                 const append = res.data.list;
                 this.totalPages = res.data.pages;
                 if(this.number-1!== this.totalPages){
-                  this.contents = this.contents.concat(append);}
+                this.contents = this.contents.concat(append);}
                 this.busy = false;
               })
               .catch(() => {
@@ -220,18 +213,6 @@ export default {
               });
         }, 1000);
       }
-    },
-    getTypeArticle(typeId) {
-      getArticleByTypeId(typeId)
-          .then(res => {
-            this.contents = res.data;
-            this.totalPages = 1;
-            this.number = this.totalPages+1;
-            this.flag=1;
-            //console.log(this.number);
-          })
-          .catch(() => {
-          });
     },
     getAll() {
       getAllArticle(0)
@@ -256,6 +237,7 @@ export default {
   },
   created() {
     // this.loadMore();
+    this.search = JSON.parse(this.$route.query.search);
   }
 };
 </script>

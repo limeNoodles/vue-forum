@@ -21,10 +21,6 @@
           本论坛提供的内容仅用于个人学习、研究或欣赏。我们不保证内容的正确性。通过使用本站内容随之而来的风险与本站无关
           访问者可将本网站提供的内容或服务用于个人学习、研究或欣赏，以及其他非商业性或非盈利性用途，但同时应遵守著作权法及其他相关法律的规定，不得侵犯本网站及相关权利人的合法权利。
           本网站内容原作者如不愿意在本网站刊登内容，请及时通知本站，予以删除。
-          本论坛由cp3开发完成，主要是面向在校大学生用于日常交流学习，同时欢迎大佬提供改进意见。我的GitHub账号：
-          <a
-            href="https://github.com/Chp3"
-          >Chp3</a>
         </p>
       </b-collapse>
     </section>
@@ -33,14 +29,15 @@
 </template>
 
 <script>
-import { register } from "@/api";
+//import { register } from "@/api";
 export default {
   data() {
     return {};
   },
   methods: {
     submit() {
-      console.log(this.$store.state.registeruser.userName);
+      this.$router.go(-1);
+/*      console.log(this.$store.state.registeruser.userName);
       const userName = this.$store.state.registeruser.userName;
       const userPassword = this.$store.state.registeruser.userPassword;
       const userShow = this.$store.state.registeruser.userShow;
@@ -71,7 +68,7 @@ export default {
             this.$router.go(-1);
           }
         });
-      }
+      }*/
     }
   }
 };

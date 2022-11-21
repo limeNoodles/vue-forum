@@ -26,9 +26,9 @@
 export default {
   data() {
     return {
-      total: 25,
+      total: 0,
       current: 1,
-      perPage: 2,
+      perPage: 3,
       rangeBefore: 3,
       rangeAfter: 1,
       order: "",
@@ -40,11 +40,15 @@ export default {
     };
   },
   mounted() {
-    this.total = this.$store.state.totalElements;
+    this.total = this.$store.state.total;
+    console.log(this.$store.state.total);
+    console.log(this.total);
   },
   methods: {
     change(number) {
       this.$store.dispatch("changepage", number);
+      console.log(this.$store.state.total);
+      console.log(this.total);
     }
   }
 };

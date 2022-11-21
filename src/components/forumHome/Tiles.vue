@@ -10,7 +10,7 @@
               <div class="hero-body has-text-centered">
                 <div class="card">
                   <header class="card-header">
-                    <p class="card-header-title">板块名:{{ content.typeName }}</p>
+                    <p class="card-header-title">板块名:{{ content.type_name }}</p>
                     <a href="#" class="card-header-icon" aria-label="more options">
                       <span class="icon">
                         <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -18,10 +18,21 @@
                     </a>
                   </header>
                   <div class="card-content">
-                    <div class="content">
-                      板块简介:{{ content.typeDesc }}
-                      <br />
-                    </div>
+                    <el-table-column prop="model" label="板块简介" width="180">
+                        <el-popover trigger="hover" placement="top" :open-delay="800">
+                          <div class="text_overflow" slot="reference">
+                            <span>{{ content.type_description| typefacelength }}</span>
+                          </div>
+                          <div class="pup_card">
+                            {{ content.type_description }}
+                          </div>
+                        </el-popover>
+                    </el-table-column>
+
+<!--                    <div class="content">
+                      板块简介:{{ content.type_description }}
+                      <br/>
+                    </div>-->
                   </div>
                   <footer class="card-footer">
                     <a href="#" class="card-footer-item">关注</a>
@@ -37,24 +48,31 @@
     <div class="tile is-parent is-8">
       <article class="tile is-child box">
         <p align="right">
+          <b-button type="button is-info" outlined @click="Post">去发帖</b-button>
+          &emsp;&emsp;&emsp;
           <b-button type="button is-info" outlined @click="allart">全部帖子</b-button>
         </p>
+
         <p class="subtitle">热门帖子</p>
 
         <div class="box" v-for="(item, i) in $store.state.info" :key="i">
           <article class="media">
             <figure class="media-left">
               <p class="image is-64x64">
-                <img :src="require(`@/assets/${item.user.userImg}`)" class="size" />
+<!--                <el-avatar :size="70" src="https://empty" @error="errorHandler">
+                  <img :src="`${item.user.avatar_url}`" class="el-avatar&#45;&#45;circle"/>
+                </el-avatar>-->
+                <img :src="(`${item.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
+<!--                <img :src="(`${item.user.avatar_url}`)" class="size"/>-->
                 <!-- <img src="../../assets/user1.jpg" alt /> -->
               </p>
             </figure>
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong>{{ item.user.userName }}</strong>
-                  <br />
-                  {{ item.article.artTitle }}
+                  <strong>{{ item.user.user_name }}</strong>
+                  <br/>
+                  {{ item.post_title }}
                 </p>
               </div>
               <nav class="level is-mobile">
@@ -63,23 +81,24 @@
                     <span class="icon is-small">
                       <i class="fab fa-hotjar"></i>
                     </span>
-                    {{ item.article.artHotNum }}
+                    {{ item.post_star }}
                   </a>
 
                   <a class="level-item">
                     <span class="icon is-small">
                       <i class="fas fa-comment-dots"></i>
                     </span>
-                    {{ item.article.artComNum }}
+                    {{ item.post_reply }}
                   </a>
 
                   <a class="level-item">
                     <span class="icon is-small">
                       <i class="fas fa-heart"></i>
                     </span>
-                    {{ item.article.artLikeNum }}
+                    {{ item.post_like }}
                   </a>
                 </div>
+                <small class="gray">发布时间: {{item.creat_time}}</small>
               </nav>
             </div>
             <div class="media-right">
@@ -89,68 +108,59 @@
             </div>
           </article>
         </div>
-        <Pageination />
+
+        <div class="block" >
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="change"
+              :current-page.sync="currentPage1"
+              :page-size="5"
+              layout="total, prev, pager, next"
+              :total="this.total"
+          >
+          </el-pagination>
+        </div>
+
       </article>
     </div>
   </div>
 </template>
 
 <script>
-import { getHotArticleType } from "@/api";
+import {getHotArticleType, getPageMain} from "@/api";
 // import { getPageMain } from "@/api";
-import Pageination from "../forumHome/Pageination.vue";
+//import Pageination from "../forumHome/Pageination.vue";
+
+
+
 export default {
   data() {
     return {
-      // info: [
-      //   {
-      //     article: {
-      //       artId: 0,
-      //       artUserId: 1,
-      //       artTitle: "",
-      //       artTypeId: 0,
-      //       artContent: "",
-      //       artCommentId: 0,
-      //       artCreTime: "",
-      //       artView: "",
-      //       artComNum: 0,
-      //       artHotNum: 0,
-      //       artLikeNum: 0
-      //     },
-      //     user: {
-      //       userId: 0,
-      //       userPassword: 0,
-      //       userName: "",
-      //       userEmail: "",
-      //       userSex: "",
-      //       userPhone: "",
-      //       userStatus: 0,
-      //       userTime: "",
-      //       userShow: "",
-      //       userBlog: "",
-      //       userImg: "",
-      //       userFans: 0,
-      //       userConcern: 0
-      //     }
-      //   }
-      // ],
+      total:0,
       contents: {
-        typeId: 0,
-        typeName: "",
-        typeCreateTime: "",
-        typeDesc: "",
-        articleNum: 0
+        type_id: 0,
+        type_name: "",
+        creat_time: "",
+        type_description: "",
+        post_num: 0
       }
     };
   },
   mounted() {
-    getHotArticleType()
-      .then(res => {
-        const { data } = res;
-        this.contents = data.content;
-      })
-      .catch(() => {});
 
+    getHotArticleType()
+        .then(res => {
+          const {data} = res;
+          this.contents = data.list;
+        })
+        .catch(() => {
+        });
+     getPageMain()
+       .then(res => {
+         const { data } = res;
+         this.total = data.total;
+       })
+       .catch(() => {});
     this.$store.dispatch("getpagemain");
     //bug，应该用action异步处理，再提交commit状态，明日更新（已解决）
     // getPageMain()
@@ -160,7 +170,16 @@ export default {
     //   })
     //   .catch(() => {});
   },
-  methods: {
+  methods: { Post() {
+      this.$router.push("/postarticle");
+    },
+    handleCurrentChange(currentPage){
+      this.pagination.currentpage=currentPage;//传入参数变成当前页面 在调取查询操作
+      this.getpage();
+    },
+    change(number) {
+      this.$store.dispatch("changepage", number);
+    },
     allart() {
       this.$router.push("/allarticlehome");
     },
@@ -175,8 +194,17 @@ export default {
       });
     }
   },
+  filters:{
+     typefacelength(value) {
+      if (!value) return '';
+      if (value.length > 40) {
+        return value.slice(0,40) + '...';
+      }
+      return value;
+    }
+  },
   components: {
-    Pageination
+    //Pageination
   }
 };
 </script>
@@ -185,10 +213,12 @@ export default {
 .subtitle {
   text-align: left;
 }
+
 .button {
   text-align: center;
   margin: 0 auto;
 }
+
 .size {
   width: 64px;
   height: 64px;

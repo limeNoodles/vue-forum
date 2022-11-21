@@ -102,9 +102,9 @@
         <div  class="navbar-item">
           <el-row gutter="10">
             <el-col :span="6">
-<!--              <el-avatar :size="30" src="https://empty" @error="errorHandler">
-                <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar&#45;&#45;circle"/>
-              </el-avatar>-->
+              <!--              <el-avatar :size="30" src="https://empty" @error="errorHandler">
+                              <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar&#45;&#45;circle"/>
+                            </el-avatar>-->
               <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
             </el-col>
             <el-col :span="6"><h2>{{ $store.state.user.user_name }}</h2></el-col>

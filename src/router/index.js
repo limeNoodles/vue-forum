@@ -35,11 +35,11 @@ const routes = [
         name: "articlemanger",
         component: () => import("../components/backstagehome/ArticleManger.vue")
       },
-      {
+      /*{
         path: "/typemanger",
         name: "typemanger",
         component: () => import("../components/backstagehome/TypeManger.vue")
-      }
+      }*/
     ]
   },
   {
@@ -51,7 +51,10 @@ const routes = [
     path: "/allarticlehome",
     component: () => import("../components/articlehome/Allarticlehome")
   },
-
+  {
+    path: "/allsearchhome",
+    component: () => import("../components/searchHome/Allsearchhome")
+  },
   {
     path: "/registerhome",
     component: () => import("../components/register/RegisterHome")

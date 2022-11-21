@@ -5,22 +5,20 @@
       <div class="tile">
         <div class="tile is-parent is-vertical">
           <article class="tile is-child box">
-            <div class="fuck">
               <p class="title">最新发布的帖子</p>
               <div class="box" v-for="(item, i) in info" :key="i">
                 <article class="media">
                   <figure class="media-left">
                     <p class="image is-64x64">
-                      <img :src="require(`@/assets/${item.user.userImg}`)" class="size" />
-                      <!-- <img src="../../assets/user1.jpg" alt /> -->
+                      <img :src="(`${item.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
                     </p>
                   </figure>
                   <div class="media-content">
                     <div class="content">
                       <p>
-                        <strong>{{ item.user.userName }}</strong>
+                        <strong>{{ item.user.user_name }}</strong>
                         <br />
-                        {{ item.article.artTitle }}
+                        {{ item.post_title }}
                       </p>
                     </div>
                     <nav class="level is-mobile">
@@ -29,22 +27,23 @@
                           <span class="icon is-small">
                             <i class="fab fa-hotjar"></i>
                           </span>
-                          {{ item.article.artHotNum }}
+                          {{ item.post_star }}
                         </a>
 
                         <a class="level-item">
                           <span class="icon is-small">
                             <i class="fas fa-comment-dots"></i>
                           </span>
-                          {{ item.article.artComNum }}
+                          {{ item.post_reply }}
                         </a>
 
                         <a class="level-item">
                           <span class="icon is-small">
                             <i class="fas fa-heart"></i>
                           </span>
-                          {{ item.article.artLikeNum }}
+                          {{ item.post_like }}
                         </a>
+                        <small class="gray">发布时间: {{item.creat_time}}</small>
                       </div>
                     </nav>
                   </div>
@@ -55,12 +54,10 @@
                   </div>
                 </article>
               </div>
-            </div>
-            <hr />
           </article>
         </div>
 
-        <div class="tile is-parent">
+<!--        <div class="tile is-parent">
           <article class="tile is-child box">
             <p class="title">放学校风景图</p>
             <b-carousel>
@@ -75,9 +72,9 @@
               </b-carousel-item>
             </b-carousel>
           </article>
-        </div>
+        </div>-->
       </div>
-      <div class="tile is-parent">
+<!--      <div class="tile is-parent">
         <article class="tile is-child box">
           <p class="title">友情链接</p>
           <hr />
@@ -88,7 +85,7 @@
             <a href="https://tuna.moe/">清华大学TUNA协会</a>
           </div>
         </article>
-      </div>
+      </div>-->
     </div>
     <div class="tile is-parent">
       <article class="tile is-child box">
@@ -100,28 +97,33 @@
               <div class="media">
                 <div class="media-left">
                   <figure class="image is-48x48">
-                    <img :src="require(`@/assets/${user.userImg}`)" class="size" />
+<!--                    <img :src="require(`@/assets/${user.user.avatar_url}`)" class="size" />-->
+                    <img :src="(`${user.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
                     <!-- <img src="../../assets/user1.jpg" alt /> -->
                   </figure>
                 </div>
                 <div class="media-content">
-                  <p class="title is-4" v-if="user.userSex==='女'">
-                    大名：{{user.userName}}
+<!--                  <p class="title is-4" v-if="user.user.gender==='女'">
+                    大名：{{user.user.user_name}}
                     <i class="fas fa-female"></i>
-                  </p>
-
+                  </p>-->
+<!--
                   <p class="title is-4" v-else>
-                    大名：{{user.userName}}
+                    大名：{{user.user.user_name}}
+                    <i class="fas fa-male"></i>
+                  </p>-->
+                  <p class="title is-4" >
+                    昵称：{{user.user.user_name}}
                     <i class="fas fa-male"></i>
                   </p>
                 </div>
               </div>
 
               <div class="content">
-                <p>格言：{{user.userShow}}</p>
+<!--                <p>格言：{{user.userShow}}</p>-->
                 <i class="far fa-hand-point-right">个人主页</i>
                 <br />粉丝数：
-                <i class="fab fa-gratipay">{{user.userFans}}</i>
+                <i class="fab fa-gratipay">{{user.user_fans}}</i>
                 <br />
               </div>
             </div>
@@ -141,50 +143,50 @@ export default {
     return {
       users: [
         {
-          userId: 0,
-          userPassword: 0,
-          userName: "",
-          userEmail: "",
-          userSex: "",
-          userPhone: "",
-          userStatus: 0,
-          userTime: "",
-          userShow: "",
-          userBlog: "",
-          userImg: "",
-          userFans: 0,
-          userConcern: 0
+          user_id: 0,
+          user_fans: 0,
+          user_posts: 0,
+          user_follow: 0,
+          user: {
+            id: 0,
+            user_name: "",
+            user_account: "",
+            avatar_url: "",
+            gender: 0,
+            phone: 0,
+            email: "",
+            user_role: 0,
+            user_status: 0,
+            creat_time: "",
+            token: ""
+          }
         }
       ],
       info: [
         {
-          article: {
-            artId: 0,
-            artUserId: 1,
-            artTitle: "",
-            artTypeId: 0,
-            artContent: "",
-            artCommentId: 0,
-            artCreTime: "",
-            artView: "",
-            artComNum: 0,
-            artHotNum: 0,
-            artLikeNum: 0
-          },
+          post_id: 0,
+          post_type: "",
+          post_title: "",
+          post_content: "",
+          post_userid: 0,
+          post_star: 0,
+          post_like: 0,
+          post_reply: 0,
+          post_status: 0,
+          creat_time: "",
           user: {
-            userId: 0,
-            userPassword: 0,
-            userName: "",
-            userEmail: "",
-            userSex: "",
-            userPhone: "",
-            userStatus: 0,
-            userTime: "",
-            userShow: "",
-            userBlog: "",
-            userImg: "",
-            userFans: 0,
-            userConcern: 0
+            id: 0,
+            user_name: "",
+            user_account: "",
+            avatar_url: "",
+            gender: 0,
+            phone: 0,
+            email: "",
+            user_role: 0,
+            user_status: 0,
+            creat_time: "",
+            is_delete: 0,
+            token: "",
           }
         }
       ]
@@ -204,14 +206,14 @@ export default {
       });
     }
   },
-  mounted() {
+  created() {
     getnew().then(res => {
-      this.info = res.data.content;
+      console.log(res.data.list);
+      this.info = res.data.list;
     });
     gethotuser().then(res => {
-      const { data } = res;
-
-      this.users = data.content;
+      console.log(res.data.list);
+      this.users = res.data.list;
     });
   },
   components: {}

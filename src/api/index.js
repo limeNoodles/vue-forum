@@ -122,6 +122,14 @@ export const registerUser = (userAccount, userPassword,checkPassword) => {
     );
 };
 
+export const PostLike = (post_id,token) => {
+    return axios.get("/posts/post_like?"+Qs.stringify({"post_id": post_id}),{
+        headers: {
+            'Content-Type': 'application/json'
+            , 'Authorization': token
+        }
+    });
+};
 export const deletePosts = (id,token) => {
     return axios.get(
         "/posts/delete?"+Qs.stringify({"id": id}),

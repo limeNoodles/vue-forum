@@ -61,6 +61,25 @@ export default new Vuex.Store({
         }
       }
     ],
+    hotuser:[{
+        user_id: 0,
+        user_fans: 0,
+        user_posts: 0,
+        user_follow: 0,
+        user: {
+          id: 0,
+          user_name: "",
+          user_account: "",
+          avatar_url: "",
+          gender: 0,
+          phone: 0,
+          email: "",
+          user_role: 0,
+          user_status: 0,
+          creat_time: "",
+          token: ""
+
+    }}],
     total: 10,
     registeruser: {
       userName: "",

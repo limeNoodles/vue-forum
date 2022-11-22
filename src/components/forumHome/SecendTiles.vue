@@ -1,10 +1,10 @@
 <template>
   <div class="tile is-ancestor">
-    <div class="tile is-vertical is-8">
+    <div class="tile is-vertical is-0-fullhd"><!--is-8-->
       <progress class="progress is-whrite is-small" value="100%" max="30">30%</progress>
       <div class="tile">
         <div class="tile is-parent is-vertical">
-          <article class="tile is-child box">
+          <article class="tile is-child box" >
               <p class="title">最新发布的帖子</p>
               <div class="box" v-for="(item, i) in info" :key="i">
                 <article class="media">
@@ -37,7 +37,7 @@
                           {{ item.post_reply }}
                         </a>
 
-                        <a class="level-item">
+                        <a class="level-item" @click="postLike(i)">
                           <span class="icon is-small">
                             <i class="fas fa-heart"></i>
                           </span>
@@ -87,56 +87,57 @@
         </article>
       </div>-->
     </div>
-    <div class="tile is-parent">
+<!--    <div class="tile is-parent">
       <article class="tile is-child box">
         <div class="content">
           <p class="title">用户人气榜</p>
 
-          <div class="card" v-for="(user,k) in users" :key="k">
+          <div class="card" v-for="(userItem,k) in users" :key="k">
             <div class="card-content">
               <div class="media">
                 <div class="media-left">
                   <figure class="image is-48x48">
-<!--                    <img :src="require(`@/assets/${user.user.avatar_url}`)" class="size" />-->
-                    <img :src="(`${user.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
-                    <!-- <img src="../../assets/user1.jpg" alt /> -->
+&lt;!&ndash;                    <img :src="require(`@/assets/${user.user.avatar_url}`)" class="size" />&ndash;&gt;
+                    <img :src="(`${userItem.user.avatar_url}`)" class="el-avatar&#45;&#45;circle" onerror="this.src='https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
+                    &lt;!&ndash; <img src="../../assets/user1.jpg" alt /> &ndash;&gt;
                   </figure>
                 </div>
                 <div class="media-content">
-<!--                  <p class="title is-4" v-if="user.user.gender==='女'">
+&lt;!&ndash;                  <p class="title is-4" v-if="user.user.gender==='女'">
                     大名：{{user.user.user_name}}
                     <i class="fas fa-female"></i>
-                  </p>-->
-<!--
+                  </p>&ndash;&gt;
+&lt;!&ndash;
                   <p class="title is-4" v-else>
                     大名：{{user.user.user_name}}
                     <i class="fas fa-male"></i>
-                  </p>-->
+                  </p>&ndash;&gt;
                   <p class="title is-4" >
-                    昵称：{{user.user.user_name}}
+                    昵称：{{userItem.user.user_name}}
                     <i class="fas fa-male"></i>
                   </p>
                 </div>
               </div>
 
               <div class="content">
-<!--                <p>格言：{{user.userShow}}</p>-->
+&lt;!&ndash;                <p>格言：{{user.userShow}}</p>&ndash;&gt;
                 <i class="far fa-hand-point-right">个人主页</i>
                 <br />粉丝数：
-                <i class="fab fa-gratipay">{{user.user_fans}}</i>
+                <i class="fab fa-gratipay">{{userItem.user_fans}}</i>
                 <br />
               </div>
             </div>
           </div>
         </div>
       </article>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
-import { getnew } from "@/api";
-import { gethotuser } from "@/api";
+import {getnew, PostLike} from "@/api";
+import {SnackbarProgrammatic as Snackbar} from "buefy";
+/*import { gethotuser } from "@/api";*/
 
 export default {
   data() {
@@ -193,8 +194,17 @@ export default {
     };
   },
   methods: {
-    getImgUrl(value) {
-      return `https://picsum.photos/id/43${value}/576/400`;
+    postLike(i){
+      const detaildata = this.info[i];
+      const postid=detaildata.post_id;
+      PostLike(postid,this.$store.state.user.token).then(res=>{
+        if(res.code===2000){
+          Snackbar.open({message:"点赞成功!",position: 'is-top'});
+          detaildata.post_like+=1;
+        }else {
+          Snackbar.open({message:res.description,position: 'is-top'});
+        }
+      });
     },
     detail(i) {
       const detaildata = this.info[i];
@@ -206,16 +216,20 @@ export default {
       });
     }
   },
-  created() {
+  mounted() {
     getnew().then(res => {
       console.log(res.data.list);
       this.info = res.data.list;
     });
-    gethotuser().then(res => {
-      console.log(res.data.list);
-      this.users = res.data.list;
-    });
+    //this.$store.dispatch("getHotuser");
   },
+/*  created() {
+    gethotuser().then(res => {
+      this.users = this.users.append(res.data.list);
+      //this.users = res.data.list;
+      console.log(this.users);
+    });
+  },*/
   components: {}
 };
 </script>

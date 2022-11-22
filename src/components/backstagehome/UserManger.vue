@@ -1,4 +1,5 @@
 <template>
+  <div class="dormitory">
 <!--  <div class="tile is-ancestor">
     <div class="tile is-parent" v-for="(item,i) in user" :key="i">
       <article class="tile is-child box">
@@ -12,7 +13,14 @@
       </article>
     </div>
   </div>-->
-  <el-table ref="filterTable" :data="user"  height="600" style="width: 100%" >
+  <div class="searchWord" >
+    <p>
+    搜索:  <el-input v-model="search" style="display: inline-block;width: 300px"
+              placeholder="请输入搜索内容">
+    </el-input></p>
+  </div>
+    <div class="dormitoryData">
+  <el-table ref="dormitoryTable" :data="tables"  height="500" style="width: 100%" >
     <el-table-column align="center" prop="id"  label="用户id" width="70"></el-table-column>
     <el-table-column align="center" prop="user_name" label="用户名"  width="130" >
       <template slot-scope="scope">
@@ -29,7 +37,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column align="center" prop="gender" label="用户性别" :formatter="genderFormat" sortable width="130" column-key="date">
+    <el-table-column align="center" prop="gender" label="用户性别" :formatter="genderFormat" sortable width="130" column-key="num">
       <template slot-scope="scope">
         <div v-if="!scope.row.isEdit">{{ scope.row.gender ==0?"男":"女"}}</div>
         <div v-else>
@@ -57,7 +65,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column align="center" prop="user_role" label="用户角色" :formatter="roleFormat" sortable width="130" column-key="date">
+    <el-table-column align="center" prop="user_role" label="用户角色" :formatter="roleFormat" sortable width="130" column-key="num">
       <template slot-scope="scope">
         <div v-if="!scope.row.isEdit">{{ scope.row.user_role ==0?"用户":"管理员"}}</div>
         <div v-else>
@@ -69,7 +77,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column align="center" prop="user_status" label="账户状态" :formatter="statusFormat" sortable width="130" column-key="date">
+    <el-table-column align="center" prop="user_status" label="账户状态" :formatter="statusFormat" sortable width="130" column-key="num">
       <template slot-scope="scope">
         <div v-if="!scope.row.isEdit">{{ scope.row.user_status ==0?"正常":"异常"}}</div>
         <div v-else>
@@ -92,6 +100,8 @@
       </template>
     </el-table-column>
   </el-table>
+    </div>
+  </div>
 </template>
 
 
@@ -101,6 +111,7 @@ import {SnackbarProgrammatic as Snackbar} from "buefy";
 export default {
   data() {
     return {
+      search:"",
       user: [
         {
           id: 0,
@@ -125,9 +136,9 @@ export default {
         this.user = res.data;
       })
       .catch();
-    this.$nextTick(() => {
+   /* this.$nextTick(() => {
       this.$refs.filterTable.doLayout();
-    });
+    });*/
   },
   methods:{
     handleClick(row) {
@@ -180,7 +191,7 @@ export default {
       deleteUser(id,this.$store.state.user.token).then(res=>{
         if(res.code ===2000){
           Snackbar.open({message:"删除成功!",position: 'is-top'});
-          this.reload();
+          //this.reload();
         }else {
           Snackbar.open({message:"删除失败",position: 'is-top'});
         }
@@ -189,6 +200,31 @@ export default {
      this.user.splice(index,1);
 
     },
+  },
+  computed: {
+    // 模糊搜索
+    tables () {
+      const search = this.search
+      if (search) {
+        // filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+        // 注意： filter() 不会对空数组进行检测。
+        // 注意： filter() 不会改变原始数组。
+        return this.user.filter(data => {
+          // some() 方法用于检测数组中的元素是否满足指定条件;
+          // some() 方法会依次执行数组的每个元素：
+          // 如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测;
+          // 如果没有满足条件的元素，则返回false。
+          // 注意： some() 不会对空数组进行检测。
+          // 注意： some() 不会改变原始数组。
+          return Object.keys(data).some(key => {
+            // indexOf() 返回某个指定的字符在某个字符串中首次出现的位置，如果没有找到就返回-1；
+            // 该方法对大小写敏感！所以之前需要toLowerCase()方法将所有查询到内容变为小写。
+            return String(data[key]).toLowerCase().indexOf(search) > -1
+          })
+        })
+      }
+      return this.user
+    }
   }
 };
 </script>

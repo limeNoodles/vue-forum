@@ -1,11 +1,10 @@
-import {getPageMain, getPageMainByPage} from "@/api"
+import {gethotuser, getPageMain, getPageMainByPage} from "@/api"
 
 export default {
     //context:上下文，actions中的默认参数，理解成store对象
     aLogin(context, payload) {
         setTimeout(() => {
             context.commit('login', payload.user)
-            console.log(payload.message);
             payload.success();
         }, 1000);
     },
@@ -13,10 +12,17 @@ export default {
 
     getpagemain(context) {
         getPageMain().then(res => {
-            console.log(res.data.total)
             context.commit('getpagemain', {
                     info: res.data.list,
                     total: res.data.total
+                }
+            );
+        }).catch()
+    },
+    getHotuser(context) {
+        gethotuser().then(res => {
+            context.commit('gethotusers', {
+                    hotuser: res.data.list
                 }
             );
         }).catch()

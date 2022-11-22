@@ -19,6 +19,9 @@ export default {
         // state.totalPages = payload.totalPages;
         state.total = payload.total;
     },
+    gethotusers(state, payload) {
+        state.hotuser = payload.hotuser;
+    },
 
     first(state, payload) {
         state.registeruser.userName = payload.userName;

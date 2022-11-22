@@ -48,7 +48,7 @@
                       {{ content.post_reply }}
                     </a>
 
-                    <a class="level-item">
+                    <a class="level-item" @click="postLike(index)">
                       <span class="icon is-small">
                         <i class="fas fa-heart"></i>
                       </span>
@@ -118,9 +118,10 @@
 
 
 <script>
-import {getAllArticle} from "@/api";
+import {getAllArticle, PostLike} from "@/api";
 import {getAllArticleType} from "@/api";
 import {getArticleByTypeId} from "@/api";
+import {SnackbarProgrammatic as Snackbar} from "buefy";
 
 export default {
   data() {
@@ -195,9 +196,19 @@ export default {
   },
 
   methods: {
+    postLike(i){
+      const detaildata = this.contents[i];
+      const postid=detaildata.post_id;
+      PostLike(postid,this.$store.state.user.token).then(res=>{
+        if(res.code===2000){
+          Snackbar.open({message:"点赞成功!",position: 'is-top'});
+          detaildata.post_like+=1;
+        }else {
+          Snackbar.open({message:res.description,position: 'is-top'});
+        }
+      });
+    },
     loadMore() {
-      console.log("scrolling");
-
       this.busy = true;
       if (this.number - 1 === this.totalPages) {
         this.flag = 1;

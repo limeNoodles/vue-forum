@@ -91,7 +91,7 @@
                     {{ item.post_reply }}
                   </a>
 
-                  <a class="level-item">
+                  <a class="level-item" @click="postLike(i)">
                     <span class="icon is-small">
                       <i class="fas fa-heart"></i>
                     </span>
@@ -127,7 +127,8 @@
 </template>
 
 <script>
-import {getHotArticleType, getPageMain} from "@/api";
+import {getHotArticleType, getPageMain, PostLike} from "@/api";
+import {SnackbarProgrammatic as Snackbar} from "buefy";
 // import { getPageMain } from "@/api";
 //import Pageination from "../forumHome/Pageination.vue";
 
@@ -170,7 +171,20 @@ export default {
     //   })
     //   .catch(() => {});
   },
-  methods: { Post() {
+  methods: {
+    postLike(i){
+      const detaildata = this.$store.state.info[i];
+      const postid=detaildata.post_id;
+      PostLike(postid,this.$store.state.user.token).then(res=>{
+          if(res.code===2000){
+            Snackbar.open({message:"点赞成功!",position: 'is-top'});
+            detaildata.post_like+=1;
+          }else {
+            Snackbar.open({message:res.description,position: 'is-top'});
+          }
+      });
+    },
+    Post() {
       this.$router.push("/postarticle");
     },
     handleCurrentChange(currentPage){
@@ -185,7 +199,6 @@ export default {
     },
     details(i) {
       const detaildata = this.$store.state.info[i];
-      console.log(detaildata);
       this.$router.push({
         path: "/details",
         query: {

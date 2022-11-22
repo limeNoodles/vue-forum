@@ -48,7 +48,7 @@
                       {{ content.post_reply }}
                     </a>
 
-                    <a class="level-item">
+                    <a class="level-item" @click="postLike(index)">
                       <span class="icon is-small">
                         <i class="fas fa-heart"></i>
                       </span>
@@ -117,7 +117,8 @@
 
 
 <script>
-import {getAllArticle, getAllArticleSearch} from "@/api";
+import {getAllArticle, getAllArticleSearch, PostLike} from "@/api";
+import {SnackbarProgrammatic as Snackbar} from "buefy";
 
 export default {
   data() {
@@ -165,6 +166,7 @@ export default {
     };
   },
   mounted() {
+
     getAllArticleSearch(1,this.search)
         .then(res => {
           if(res.data.list.length <1){
@@ -188,6 +190,18 @@ export default {
   },
 
   methods: {
+    postLike(i){
+      const detaildata = this.contents[i];
+      const postid=detaildata.post_id;
+      PostLike(postid,this.$store.state.user.token).then(res=>{
+        if(res.code===2000){
+          Snackbar.open({message:"点赞成功!",position: 'is-top'});
+          detaildata.post_like+=1;
+        }else {
+          Snackbar.open({message:res.description,position: 'is-top'});
+        }
+      });
+    },
     loadMore() {
       console.log("scrolling");
 

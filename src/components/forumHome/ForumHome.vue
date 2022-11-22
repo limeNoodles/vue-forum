@@ -20,6 +20,7 @@ import Tiles from "../forumHome/Tiles";
 import Footer from "../forumHome/Footer";
 import SecendTiles from "../forumHome/SecendTiles";
 import Top from "@/components/articlehome/Top";
+//import ThirdTiles from "@/components/forumHome/ThirdTiles";
 
 
 export default {
@@ -28,7 +29,7 @@ export default {
     Tiles,
     Footer,
     SecendTiles,
-    
+    //ThirdTiles
   }
 };
 </script>

@@ -102,15 +102,15 @@
       <div class="navbar-brand" v-else-if="$store.state.isLogin">
         <div  class="navbar-item">
 
-          <el-row gutter="10">
+          <el-row gutter="50">
             <el-col :span="6">
               <!--              <el-avatar :size="30" src="https://empty" @error="errorHandler">
                               <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar&#45;&#45;circle"/>
                             </el-avatar>-->
-              <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
+              <img :src="(`${$store.state.user.avatar_url}`)" sizes="40" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
             </el-col>
-            <el-col :span="6"><h2>{{ $store.state.user.user_name }}</h2></el-col>
-            <el-col :span="6">
+            <el-col :span="8"><h2>{{ $store.state.user.user_name }}</h2></el-col>
+            <el-col :span="4">
               <el-button size="small" round type="primary" @click="logout"><i class="fas fa-sign-out-alt">登出</i></el-button>
             </el-col>
           </el-row>

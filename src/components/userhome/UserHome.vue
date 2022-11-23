@@ -90,6 +90,9 @@
                   </tr>
                 </tbody>
               </table>
+              <b-button type="button is-info" outlined @click="Post">去发帖</b-button>
+              &emsp;&emsp;&emsp;
+              <b-button type="button is-info" outlined @click="Update">修改个人信息</b-button>
               <div class="sep5"></div>
             </div>
           </div>
@@ -201,6 +204,12 @@ export default {
     });
   },
   methods:{
+    Update(){
+      this.$router.push("/selfmessageupdate");
+    },
+    Post() {
+      this.$router.push("/postarticle");
+    },
     details(i) {
       const detaildata =         {
         post_id: this.mypost[i].post_id,

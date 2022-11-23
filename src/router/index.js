@@ -45,7 +45,12 @@ const routes = [
   {
     path: "/userhome",
     meta: { requireAuth: true },
-    component: () => import("../components/userhome/UserHome")
+    component: () => import("../components/userhome/UserHome"),
+  },
+  {
+    path: "/selfmessageupdate",
+    name: "selfmessageupdate",
+    component: () => import("../components/userhome/UpdateUser.vue")
   },
   {
     path: "/allarticlehome",

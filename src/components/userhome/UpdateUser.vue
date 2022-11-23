@@ -1,86 +1,44 @@
 <template>
-  <div id="Wrapper">
-    <div class="content">
-      <div id="Leftbar"></div>
+  <el-container>
+    <el-header>
+      <Top/>
+    </el-header>
+    <el-container>
+      <el-main >
 
-      <div id="Main">
-        <div class="sep20"></div>
-        <div class="box">
-          <div class="header">
-            <a href="/public">微趣论坛</a>
-            <span class="chevron">&nbsp;›&nbsp;</span> 注册 &nbsp;
-            <li class="fa fa-lock"></li>
-          </div>
-          <div class="cell">
-<!--            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item label="用户账户" prop="name">
-                <el-input v-model="ruleForm.userAccount"></el-input>
-              </el-form-item>
-              <el-form-item label="用户密码" prop="name">
-                <el-input v-model="ruleForm.userPassword"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="login">登录</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
-              </el-form-item>
-            </el-form>-->
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item label="用户名" prop="name">
-                <el-input v-model="ruleForm.userName"></el-input>
-              </el-form-item>
-              <el-form-item label="性别" prop="region">
-                <el-select v-model="ruleForm.gender" placeholder="请选择性别">
-                  <el-option label="男" value="0"></el-option>
-                  <el-option label="女" value="1"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="电话" prop="name">
-                <el-input v-model="ruleForm.phone"></el-input>
-              </el-form-item>
-              <el-form-item label="邮箱" prop="name">
-                <el-input v-model="ruleForm.email"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">保存信息</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<!--  <div class="secend">
-    <section class="f">
-      <b-field label="电话" :label-position="labelPosition">
-        <b-input
-          v-model="userPhone"
-          required
-          pattern="^((\d{11})|(\d{7,8})|(\d{4}|\d{3})-(\d{7,8}))$"
-          validation-message="请输入正确的电话号码!"
-        ></b-input>
-      </b-field>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="用户名" prop="userName">
+            <el-input ref="username"  v-model="ruleForm.userName"></el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="region">
+            <el-select ref="gender" v-model="ruleForm.gender" placeholder="请选择性别">
+              <el-option label="男" value="0"></el-option>
+              <el-option label="女" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话" prop="phone">
+            <el-input ref="phone"  v-model="ruleForm.phone"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input ref="email"  v-model="ruleForm.email"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm">保存信息</el-button>
+            <el-button @click="resetForm">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-main>
+    </el-container>
+  </el-container>
 
-      <b-field label="性别" :label-position="labelPosition">
-        <b-select placeholder="选择性别" v-model="userSex">
-          <option value="男">男</option>
-          <option value="女">女</option>
-        </b-select>
-      </b-field>
 
-      <b-field label="个性签名" :label-position="labelPosition">
-        <b-input maxlength="200" type="textarea" v-model="userShow"></b-input>
-      </b-field>
-
-      <hr />
-    </section>
-    <b-button type="is-info" outlined rounded @click="secend">保存</b-button>
-  </div>-->
 </template>
 
 <script>
-import { SnackbarProgrammatic as Snackbar } from "buefy";
+import {SnackbarProgrammatic as Snackbar} from "buefy";
+import Top from "@/components/articlehome/Top";
 import {updateUser} from "@/api";
+
 export default {
   data() {
     return {
@@ -96,41 +54,71 @@ export default {
       },
       rules: {
         userName: [
-          { required: true, message: '请输入您的账户', trigger: 'blur' },
-          { min: 4, max: 15, message: '长度在 4 到 15 个字符', trigger: 'blur' }
+          { message: '请输入您的账户', trigger: 'blur'},
+          {min: 4, max: 15, message: '长度在 4 到 15 个字符', trigger: 'blur'},
+          {pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/, message: '不允许输入空格等特殊符号'}
         ],
         phone: [
-          { required: true, message: '请输入您的电话号码', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+          {message: '请输入您的电话号码', trigger: 'blur'},
+          {min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur'},
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
         ],
         email: [
-          { required: true, message: '请输入您的邮箱', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+          {message: '请输入您的邮箱', trigger: 'blur'},
+          {min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur'},
+          {
+            pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+            message: "请输入正确的邮箱",
+            trigger: "blur"
+          }
         ]
       }
     };
   },
+  created() {
+    this.ruleForm.userName = this.$store.state.user.user_name == null ? "" : this.$store.state.user.user_name;
+    this.ruleForm.phone = this.$store.state.user.phone == null ? "" : this.$store.state.user.phone;
+    this.ruleForm.email = this.$store.state.user.email == null ? "" : this.$store.state.user.email;
+    this.ruleForm.gender = this.$store.state.user.gender == null ? "" : this.$store.state.user.gender;
+  },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          updateUser(this.$store.state.user.id,this.ruleForm.userName,this.ruleForm.gender,
-                     this.ruleForm.phone,this.ruleForm.email).then(res => {
-              if(res.code===2000){
-                Snackbar.open({message:"信息修改成功",position: 'is-top'});
-              }else {
-                Snackbar.open({message:res.description,position: 'is-top'});
-              }
-          });
-          //alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    submitForm() {
+      this.$refs['ruleForm'].validate((valid) => {
+            if (valid) {
+              const id = this.$store.state.user.id;
+              const userName = this.ruleForm.userName;
+              const gender = this.ruleForm.gender;
+              const phone = this.ruleForm.phone;
+              const email = this.ruleForm.email;
+              const userRole = this.$store.state.user.user_role;
+              const userState = this.$store.state.user.user_status;
+              const token = this.$store.state.user.token;
+              updateUser(id, userName, gender, phone, email, userRole, userState, token).then(res => {
+                if (res.code === 2000) {
+                  Snackbar.open({message: "更新成功!", position: 'is-top'});
+                  this.$store.state.user.user_name = userName;
+                  this.$store.state.user.gender = gender;
+                  this.$store.state.user.phone = phone;
+                  this.$store.state.user.email = email;
+                  this.$router.push("/userhome");
+                } else {
+                  Snackbar.open({message: "更新失败!", position: 'is-top'});
+                }
+              });
+            }
+            else {
+              Snackbar.open({message: "请正确填写信息!", position: 'is-top'});
+            }
+          })},
+    resetForm() {
+      this.ruleForm.userName = "";
+      this.ruleForm.phone = "";
+      this.ruleForm.email = "";
+      this.ruleForm.gender = "";
     },
     secend() {
       this.$store.commit("secend", {
@@ -139,9 +127,9 @@ export default {
         userSex: this.userSex
       });
       if (
-        this.$store.state.registeruser.userPhone != "" &&
-        this.$store.state.registeruser.userShow != "" &&
-        this.$store.state.registeruser.userSex != ""
+          this.$store.state.registeruser.userPhone != "" &&
+          this.$store.state.registeruser.userShow != "" &&
+          this.$store.state.registeruser.userSex != ""
       ) {
         Snackbar.open("保存成功");
       } else {
@@ -161,6 +149,9 @@ export default {
         });
       }
     }
+  },
+  components: {
+    Top
   }
 };
 </script>
@@ -172,6 +163,7 @@ export default {
   height: 500px;
   text-align: center;
 }
+
 .f {
   padding-top: 8rem;
 }

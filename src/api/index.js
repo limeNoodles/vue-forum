@@ -4,7 +4,7 @@ import {SnackbarProgrammatic as Snackbar} from 'buefy'
 //import * as url from "url";
 
 //全局默认配置
-axios.defaults.baseURL = "http://localhost:8080/api";
+axios.defaults.baseURL = "http://182.61.5.92:8080/api";
 // axios.interceptors.request.use(
 //     config => {
 //         console.log(config);

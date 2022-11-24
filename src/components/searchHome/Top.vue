@@ -27,7 +27,7 @@
       <div class="navbar-start">
         <a class="navbar-item" @click="getMainPosts">首页</a>
 
-        <a class="navbar-item">热榜</a>
+<!--        <a class="navbar-item">热榜</a>-->
 
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">更多</a>
@@ -36,6 +36,7 @@
             <a class="navbar-item" @click="userhome">个人主页</a>
 <!--            <a class="navbar-item">全部板块</a>-->
             <a class="navbar-item" @click="allart">全部帖子</a>
+            <a class="navbar-item" v-show="$store.state.user.user_role === 1" @click="manager">后台管理</a>
             <hr class="navbar-divider"/>
 <!--            <a class="navbar-item">Report an issue</a>-->
           </div>
@@ -44,16 +45,16 @@
           <div class="level-item">
             <p class="subtitle is-5"></p>
           </div>
-          <div class="level-item">
+<!--          <div class="level-item">
             <div class="field has-addons">
               <p class="control">
-                <input class="input" type="text" placeholder="Find a post"/>
+                <input class="input" type="text" placeholder="Find a post" v-model="Search"/>
               </p>
               <p class="control">
-                <button class="button">搜索</button>
+                <button class="button" @click="searchPosts">搜索</button>
               </p>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
 
@@ -100,15 +101,16 @@
       </div>
       <div class="navbar-brand" v-else-if="$store.state.isLogin">
         <div  class="navbar-item">
-          <el-row gutter="10">
+
+          <el-row gutter="50">
             <el-col :span="6">
               <!--              <el-avatar :size="30" src="https://empty" @error="errorHandler">
                               <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar&#45;&#45;circle"/>
                             </el-avatar>-->
-              <img :src="(`${$store.state.user.avatar_url}`)" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
+              <img :src="(`${$store.state.user.avatar_url}`)" sizes="40" class="el-avatar--circle" onerror="this.src='http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png';this.οnerrοr=null"/>
             </el-col>
-            <el-col :span="6"><h2>{{ $store.state.user.user_name }}</h2></el-col>
-            <el-col :span="6">
+            <el-col :span="8"><h2>{{ $store.state.user.user_name }}</h2></el-col>
+            <el-col :span="4">
               <el-button size="small" round type="primary" @click="logout"><i class="fas fa-sign-out-alt">登出</i></el-button>
             </el-col>
           </el-row>
@@ -125,7 +127,8 @@ export default {
   data() {
     return {
       userAccount: "",
-      userPassword: ""
+      userPassword: "",
+      Search: ""
     };
   },
   methods: {
@@ -135,9 +138,21 @@ export default {
     errorHandler() {
       return true
     },
+    searchPosts(){
+      this.$router.replace({
+        path: "/allsearchhome",
+        query: {
+          search: JSON.stringify(this.Search)
+        }
+      });
+    },
     allart() {
       this.$router.push("/allarticlehome");
     },
+    manager(){
+      this.$router.push("/backstagehome");
+    }
+    ,
     logout() {
       this.$store.commit("logout");
     },
@@ -149,13 +164,14 @@ export default {
           .then(res => {
             const {data} = res;
             this.user = data;
-            console.log(data);
             if (data != null) {
               this.$store.dispatch("aLogin", {
                 user: data,
                 message: "用户登录",
                 success: () => {
-                  console.log("欢迎您");
+                  if(this.$store.state.user.user_role===1){
+                    this.$router.push("backstagehome");
+                  }
                 }
               });
             } else {

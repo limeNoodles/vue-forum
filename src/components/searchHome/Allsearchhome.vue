@@ -10,7 +10,9 @@
 //import { SnackbarProgrammatic as Snackbar } from "buefy";
 
 import All from "../searchHome/All";
-import Top from "@/components/articlehome/Top";
+import Top from "@/components/searchHome/Top";
+
+
 // import Test from "../articlehome/Test";
 export default {
   mounted() {

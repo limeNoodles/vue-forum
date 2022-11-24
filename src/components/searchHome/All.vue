@@ -165,6 +165,9 @@ export default {
       totalPages: 5
     };
   },
+  watch:{
+
+  },
   mounted() {
 
     getAllArticleSearch(1,this.search)

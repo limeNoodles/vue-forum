@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import {userLogin} from "@/api";
+import {loginout, userLogin} from "@/api";
 
 export default {
   data() {
@@ -154,6 +154,7 @@ export default {
     }
     ,
     logout() {
+      loginout(this.$store.state.user.token);
       this.$store.commit("logout");
     },
     userhome() {
@@ -164,7 +165,6 @@ export default {
           .then(res => {
             const {data} = res;
             this.user = data;
-            console.log(data);
             if (data != null) {
               this.$store.dispatch("aLogin", {
                 user: data,
@@ -173,7 +173,6 @@ export default {
                   if(this.$store.state.user.user_role===1){
                     this.$router.push("backstagehome");
                   }
-                  console.log("欢迎您");
                 }
               });
             } else {

@@ -74,6 +74,20 @@ axios.interceptors.response.use(res => {
      });*/
 })
 
+
+
+export const loginout = (token) => {
+    return axios.post(
+        "/user/logout",
+        {},
+        {
+            headers: {
+                'Content-Type': 'application/json'
+                , 'Authorization': token
+            }
+        }
+    );
+};
 //post传数据用data，get传参数用params
 export const adminLogin = (username, password) => {
     return axios.post("/loginbackstage", Qs.stringify({username, password}));
